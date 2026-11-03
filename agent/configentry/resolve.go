@@ -6,8 +6,8 @@ package configentry
 import (
 	"fmt"
 
+	"dario.cat/mergo"
 	"github.com/hashicorp/go-hclog"
-	"github.com/imdario/mergo"
 	"github.com/mitchellh/copystructure"
 
 	"github.com/hashicorp/consul/agent/structs"

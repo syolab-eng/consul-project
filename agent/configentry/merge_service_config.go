@@ -6,9 +6,9 @@ package configentry
 import (
 	"fmt"
 
+	"dario.cat/mergo"
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-memdb"
-	"github.com/imdario/mergo"
 	"github.com/mitchellh/copystructure"
 
 	"github.com/hashicorp/consul/acl"
