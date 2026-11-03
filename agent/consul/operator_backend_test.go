@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/consul/acl"
 	external "github.com/hashicorp/consul/agent/grpc-external"
 	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib/testhelpers"
 	"github.com/hashicorp/consul/proto/private/pboperator"
 	"github.com/hashicorp/consul/sdk/testutil/retry"
 	"google.golang.org/grpc/credentials/insecure"
@@ -26,8 +25,15 @@ import (
 func TestOperatorBackend_TransferLeader(t *testing.T) {
 	t.Parallel()
 
-	testhelpers.SkipFlake(t)
-
+	// Raft's LeadershipTransfer future succeeds when the leader leaves the
+	// leader loop, including when it steps down because its lease expired
+	// ("lost leadership during transfer") rather than because the chosen
+	// follower won. A follow-up election can then re-elect the same server.
+	// The previous check slept for a full lease (1s) and read one node's
+	// cached LeaderWithID, which is cleared on step-down, so it often ran
+	// after leadership had bounced back. Read raft state directly, inside a
+	// window shorter than HeartbeatTimeout, and retry the call when this
+	// attempt did not actually move leadership.
 	conf := testClusterConfig{
 		Datacenter: "dc1",
 		Servers:    3,
@@ -43,11 +49,12 @@ func TestOperatorBackend_TransferLeader(t *testing.T) {
 	// Make sure a leader is elected
 	testrpc.WaitForLeader(t, s1.RPC, "dc1")
 
-	// Make a write call to server2 and make sure it gets forwarded to server1
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	// Dial one server. TransferLeader is forwarded to the current leader.
+	// The context has to cover several transfer attempts: each attempt can
+	// block until ElectionTimeout while raft waits for the leader to step down.
+	ctx, cancel := context.WithTimeout(context.Background(), 40*time.Second)
 	t.Cleanup(cancel)
 
-	// Dial server2 directly
 	conn, err := gogrpc.DialContext(ctx, s1.config.RPCAddr.String(),
 		gogrpc.WithContextDialer(newServerDialer(s1.config.RPCAddr.String())),
 		gogrpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -57,24 +64,57 @@ func TestOperatorBackend_TransferLeader(t *testing.T) {
 
 	operatorClient := pboperator.NewOperatorServiceClient(conn)
 
-	testutil.RunStep(t, "transfer leader", func(t *testing.T) {
-		beforeLeader, _ := s1.raft.LeaderWithID()
-		require.NotEmpty(t, beforeLeader)
-		// Do the grpc Write call to server2
-		req := pboperator.TransferLeaderRequest{
-			ID: "",
+	// singleLeader is the node ID of the only server in raft leader state.
+	// An empty result means an election is in progress or more than one
+	// server still reports itself as leader.
+	singleLeader := func() string {
+		var id string
+		for _, srv := range nodes.Servers {
+			if !srv.IsLeader() {
+				continue
+			}
+			if id != "" {
+				return ""
+			}
+			id = string(srv.config.NodeID)
 		}
-		reply, err := operatorClient.TransferLeader(ctx, &req)
-		require.NoError(t, err)
-		require.True(t, reply.Success)
-		testrpc.WaitForLeader(t, s1.RPC, "dc1")
-		retry.Run(t, func(r *retry.R) {
-			time.Sleep(1 * time.Second)
-			afterLeader, _ := s1.raft.LeaderWithID()
-			require.NotEmpty(r, afterLeader)
-			require.NotEqual(r, afterLeader, beforeLeader)
-		})
+		return id
+	}
 
+	testutil.RunStep(t, "transfer leader", func(t *testing.T) {
+		retry.RunWith(&retry.Timer{Wait: 200 * time.Millisecond, Timeout: 30 * time.Second}, t, func(r *retry.R) {
+			before := singleLeader()
+			if before == "" {
+				r.Fatal("cluster has no single leader")
+			}
+
+			req := pboperator.TransferLeaderRequest{
+				ID: "",
+			}
+			reply, err := operatorClient.TransferLeader(ctx, &req)
+			if err != nil {
+				r.Fatalf("TransferLeader: %v", err)
+			}
+			if reply == nil || !reply.Success {
+				r.Fatal("TransferLeader returned success=false")
+			}
+
+			// The new leader is already elected when a real transfer returns.
+			// Keep this shorter than HeartbeatTimeout (2s) so a later election
+			// cannot hide that result.
+			deadline := time.Now().Add(500 * time.Millisecond)
+			for {
+				after := singleLeader()
+				if after != "" && after != before {
+					return
+				}
+				if !time.Now().Before(deadline) {
+					r.Fatalf("leader still %s", before)
+				}
+				time.Sleep(20 * time.Millisecond)
+			}
+		})
+		testrpc.WaitForLeader(t, s1.RPC, "dc1")
 	})
 }
 
