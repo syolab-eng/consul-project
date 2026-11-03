@@ -284,7 +284,7 @@ jobs:
         if: steps.buildConsulEnvoyTargetImage.outcome == 'failure'
         run: docker build -t consul-envoy:target-version --build-arg CONSUL_IMAGE=${{ env.CONSUL_LATEST_IMAGE_NAME }}:local --build-arg ENVOY_VERSION=${{ env.ENVOY_VERSION }} -f ./test/integration/consul-container/assets/Dockerfile-consul-envoy ./test/integration/consul-container/assets
       - name: Build sds image
-        run: docker build -t consul-sds-server ./test/integration/connect/envoy/test-sds-server/
+        run: docker build -t consul-sds-server --build-arg GOLANG_VERSION="$(head -n 1 .go-version)" ./test/integration/connect/envoy/test-sds-server/
       - name: Configure GH workaround for ipv6 loopback
         if: ${{ !endsWith(github.repository, '-enterprise') }}
         run: |
