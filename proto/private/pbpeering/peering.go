@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
@@ -219,10 +220,9 @@ func (s *SecretsWriteRequest) Validate() error {
 
 // TLSDialOption returns the gRPC DialOption to secure the transport if CAPems
 // ara available. If no CAPems were provided in the peering token then the
-// WithInsecure dial option is returned.
+// insecure transport credentials dial option is returned.
 func (p *Peering) TLSDialOption() (grpc.DialOption, error) {
-	//nolint:staticcheck
-	tlsOption := grpc.WithInsecure()
+	tlsOption := grpc.WithTransportCredentials(insecure.NewCredentials())
 
 	if len(p.PeerCAPems) > 0 {
 		var haveCerts bool

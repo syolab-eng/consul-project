@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/keepalive"
 
 	"github.com/hashicorp/go-hclog"
@@ -51,7 +52,7 @@ func TestServer_EmitsStats(t *testing.T) {
 	})
 
 	//nolint:staticcheck
-	conn, err := grpc.DialContext(ctx, lis.Addr().String(), grpc.WithInsecure())
+	conn, err := grpc.DialContext(ctx, lis.Addr().String(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 	t.Cleanup(func() { conn.Close() })
 

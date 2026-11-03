@@ -12,6 +12,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	gogrpc "google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/hashicorp/consul/proto/private/pbconfigentry"
 	"github.com/hashicorp/consul/sdk/freeport"
@@ -36,8 +37,7 @@ func TestConfigEntryBackend_RejectsPartition(t *testing.T) {
 
 	conn, err := gogrpc.DialContext(ctx, s1.config.RPCAddr.String(),
 		gogrpc.WithContextDialer(newServerDialer(s1.config.RPCAddr.String())),
-		//nolint:staticcheck
-		gogrpc.WithInsecure(),
+		gogrpc.WithTransportCredentials(insecure.NewCredentials()),
 		gogrpc.WithBlock())
 	require.NoError(t, err)
 	t.Cleanup(func() { conn.Close() })
@@ -71,8 +71,7 @@ func TestConfigEntryBackend_IgnoresDefaultPartition(t *testing.T) {
 
 	conn, err := gogrpc.DialContext(ctx, s1.config.RPCAddr.String(),
 		gogrpc.WithContextDialer(newServerDialer(s1.config.RPCAddr.String())),
-		//nolint:staticcheck
-		gogrpc.WithInsecure(),
+		gogrpc.WithTransportCredentials(insecure.NewCredentials()),
 		gogrpc.WithBlock())
 	require.NoError(t, err)
 	t.Cleanup(func() { conn.Close() })

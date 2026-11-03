@@ -21,6 +21,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/time/rate"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/keepalive"
 
 	"github.com/hashicorp/consul-net-rpc/net/rpc"
@@ -402,7 +403,7 @@ func testGRPCIntegrationServer(t *testing.T, cb func(*Config)) (*Server, *grpc.C
 
 	grpcAddr := fmt.Sprintf("127.0.0.1:%d", srv.config.GRPCPort)
 	//nolint:staticcheck
-	conn, err := grpc.Dial(grpcAddr, grpc.WithInsecure())
+	conn, err := grpc.Dial(grpcAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 
 	t.Cleanup(func() { _ = conn.Close() })

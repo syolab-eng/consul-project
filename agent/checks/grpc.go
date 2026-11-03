@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 	hv1 "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/resolver"
 )
@@ -40,8 +41,7 @@ func NewGrpcHealthProbe(target string, timeout time.Duration, tlsConfig *tls.Con
 	if tlsConfig != nil {
 		dialOptions = append(dialOptions, grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)))
 	} else {
-		//nolint:staticcheck
-		dialOptions = append(dialOptions, grpc.WithInsecure())
+		dialOptions = append(dialOptions, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
 	return &GrpcHealthProbe{

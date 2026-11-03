@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 
@@ -105,7 +106,7 @@ func testClient(t *testing.T, server *svc.Server) pbresource.ResourceServiceClie
 	addr := testutils.RunTestServer(t, server)
 
 	//nolint:staticcheck
-	conn, err := grpc.DialContext(context.Background(), addr.String(), grpc.WithInsecure())
+	conn, err := grpc.DialContext(context.Background(), addr.String(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 	t.Cleanup(func() {
 		require.NoError(t, conn.Close())

@@ -12,6 +12,7 @@ import (
 	"time"
 
 	gogrpc "google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/stretchr/testify/require"
@@ -64,8 +65,7 @@ func TestPeeringBackend_ForwardToLeader(t *testing.T) {
 	// Dial server2 directly
 	conn, err := gogrpc.DialContext(ctx, server2.config.RPCAddr.String(),
 		gogrpc.WithContextDialer(newServerDialer(server2.config.RPCAddr.String())),
-		//nolint:staticcheck
-		gogrpc.WithInsecure(),
+		gogrpc.WithTransportCredentials(insecure.NewCredentials()),
 		gogrpc.WithBlock())
 	require.NoError(t, err)
 	t.Cleanup(func() { conn.Close() })
@@ -610,8 +610,7 @@ func TestPeerStreamService_ForwardToLeader(t *testing.T) {
 		// We will dial server2 which should forward to server1
 		conn, err := gogrpc.DialContext(ctx, server2.config.RPCAddr.String(),
 			gogrpc.WithContextDialer(newServerDialer(server2.config.RPCAddr.String())),
-			//nolint:staticcheck
-			gogrpc.WithInsecure(),
+			gogrpc.WithTransportCredentials(insecure.NewCredentials()),
 			gogrpc.WithBlock())
 		require.NoError(t, err)
 		t.Cleanup(func() { conn.Close() })
