@@ -4,10 +4,9 @@
 package agent
 
 import (
+	"context"
 	"fmt"
 	"sync"
-
-	"golang.org/x/net/context"
 
 	"github.com/hashicorp/consul/agent/cache"
 	cachetype "github.com/hashicorp/consul/agent/cache-types"
