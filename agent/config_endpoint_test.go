@@ -11,7 +11,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/hashicorp/consul/acl"
@@ -112,7 +111,7 @@ func TestConfig_Get(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/v1/config/", nil)
 		resp := httptest.NewRecorder()
 		_, err := a.srv.Config(resp, req)
-		require.Error(t, errors.New("Must provide either a kind or both kind and name"), err)
+		require.Error(t, fmt.Errorf("Must provide either a kind or both kind and name"), err)
 	})
 	t.Run("get the single mesh config", func(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/v1/config/mesh/mesh", nil)

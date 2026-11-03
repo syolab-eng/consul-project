@@ -6,6 +6,7 @@ package agent
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -22,7 +23,6 @@ import (
 
 	"github.com/NYTimes/gziphandler"
 	"github.com/go-viper/mapstructure/v2"
-	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -1322,7 +1322,7 @@ func (s *HTTPHandlers) checkWriteAccess(req *http.Request) error {
 
 	ipStr, _, err := net.SplitHostPort(req.RemoteAddr)
 	if err != nil {
-		return errors.Wrap(err, "unable to parse remote addr")
+		return fmt.Errorf("unable to parse remote addr: %w", err)
 	}
 
 	ip := net.ParseIP(ipStr)

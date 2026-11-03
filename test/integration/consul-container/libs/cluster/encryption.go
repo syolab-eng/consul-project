@@ -14,7 +14,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-uuid"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/hashicorp/consul/test/integration/consul-container/libs/utils"
@@ -31,10 +30,14 @@ func newSerfEncryptionKey() (string, error) {
 	key := make([]byte, 32)
 	n, err := rand.Reader.Read(key)
 	if err != nil {
-		return "", errors.Wrap(err, "error reading random data")
+		return "", fmt.Errorf("error reading random data: %w", err)
 	}
 	if n != 32 {
-		return "", errors.Wrap(err, "couldn't read enough entropy. Generate more entropy!")
+		// Wrap returns nil when err is nil. A short read without an error stays a nil error.
+		if err != nil {
+			return "", fmt.Errorf("couldn't read enough entropy. Generate more entropy!: %w", err)
+		}
+		return "", nil
 	}
 
 	return base64.StdEncoding.EncodeToString(key), nil

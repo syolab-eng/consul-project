@@ -5,10 +5,10 @@ package cluster
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/testcontainers/testcontainers-go"
 )
 
@@ -35,7 +35,7 @@ RETRY:
 			time.Sleep(1 * time.Second)
 			goto RETRY
 		}
-		return nil, errors.Wrap(err, "could not create network")
+		return nil, fmt.Errorf("could not create network: %w", err)
 	}
 	t.Cleanup(func() {
 		_ = network.Remove(context.Background())
