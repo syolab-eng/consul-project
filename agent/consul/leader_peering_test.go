@@ -22,6 +22,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
 	grpcstatus "google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -68,8 +69,7 @@ func TestLeader_PeeringSync_Lifecycle_ClientDeletion(t *testing.T) {
 
 	conn, err := grpc.DialContext(ctx, acceptor.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(acceptor.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -107,8 +107,7 @@ func TestLeader_PeeringSync_Lifecycle_ClientDeletion(t *testing.T) {
 
 	conn, err = grpc.DialContext(ctx, dialer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(dialer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -194,8 +193,7 @@ func TestLeader_PeeringSync_Lifecycle_UnexportWhileDown(t *testing.T) {
 
 	conn, err := grpc.DialContext(ctx, acceptor.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(acceptor.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -229,8 +227,7 @@ func TestLeader_PeeringSync_Lifecycle_UnexportWhileDown(t *testing.T) {
 
 	conn, err = grpc.DialContext(ctx, dialer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(dialer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -384,8 +381,7 @@ func TestLeader_PeeringSync_Lifecycle_ServerDeletion(t *testing.T) {
 
 	conn, err := grpc.DialContext(ctx, acceptor.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(acceptor.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -418,8 +414,7 @@ func TestLeader_PeeringSync_Lifecycle_ServerDeletion(t *testing.T) {
 
 	conn, err = grpc.DialContext(ctx, dialer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(dialer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -544,8 +539,7 @@ func testLeader_PeeringSync_failsForTLSError(t *testing.T, tokenMutateFn func(to
 
 	conn, err := grpc.DialContext(ctx, s1.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(s1.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -587,8 +581,7 @@ func testLeader_PeeringSync_failsForTLSError(t *testing.T, tokenMutateFn func(to
 
 	conn, err = grpc.DialContext(ctx, s2.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(s2.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -723,8 +716,7 @@ func TestLeader_Peering_RemoteInfo(t *testing.T) {
 	}
 	conn, err := grpc.DialContext(ctx, acceptingServer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(acceptingServer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -761,8 +753,7 @@ func TestLeader_Peering_RemoteInfo(t *testing.T) {
 
 	conn, err = grpc.DialContext(ctx, dialingServer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(dialingServer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -838,8 +829,7 @@ func TestLeader_Peering_DialerReestablishesConnectionOnError(t *testing.T) {
 
 	conn, err := grpc.DialContext(ctx, acceptingServer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(acceptingServer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -874,8 +864,7 @@ func TestLeader_Peering_DialerReestablishesConnectionOnError(t *testing.T) {
 
 	conn, err = grpc.DialContext(ctx, dialingServer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(dialingServer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -1060,8 +1049,7 @@ func TestLeader_Peering_ImportedExportedServicesCount(t *testing.T) {
 	// Create a peering by generating a token
 	conn, err := grpc.DialContext(ctx, s1.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(s1.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -1090,8 +1078,7 @@ func TestLeader_Peering_ImportedExportedServicesCount(t *testing.T) {
 
 	conn, err = grpc.DialContext(ctx, s2.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(s2.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -1287,8 +1274,7 @@ func TestLeader_Peering_ImportedExportedServicesCount(t *testing.T) {
 
 	conn2, err := grpc.DialContext(ctx, s2.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(s2.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn2.Close()
@@ -1369,8 +1355,7 @@ func TestLeader_PeeringMetrics_emitPeeringMetrics(t *testing.T) {
 
 	conn, err := grpc.DialContext(ctx, s1.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(s1.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -1813,8 +1798,7 @@ func Test_Leader_PeeringSync_ServerAddressUpdates(t *testing.T) {
 
 	conn, err := grpc.DialContext(ctx, acceptor.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(acceptor.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -1841,8 +1825,7 @@ func Test_Leader_PeeringSync_ServerAddressUpdates(t *testing.T) {
 
 	conn, err = grpc.DialContext(ctx, dialer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(dialer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -1955,8 +1938,7 @@ func Test_Leader_PeeringSync_PeerThroughMeshGateways_ServerFallBack(t *testing.T
 
 	conn, err := grpc.DialContext(ctx, acceptor.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(acceptor.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -2005,8 +1987,7 @@ func Test_Leader_PeeringSync_PeerThroughMeshGateways_ServerFallBack(t *testing.T
 
 	conn, err = grpc.DialContext(ctx, dialer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(dialer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -2059,8 +2040,7 @@ func Test_Leader_PeeringSync_PeerThroughMeshGateways_Success(t *testing.T) {
 
 	conn, err := grpc.DialContext(ctx, acceptor.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(acceptor.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()
@@ -2127,8 +2107,7 @@ func Test_Leader_PeeringSync_PeerThroughMeshGateways_Success(t *testing.T) {
 
 	conn, err = grpc.DialContext(ctx, dialer.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(dialer.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	defer conn.Close()

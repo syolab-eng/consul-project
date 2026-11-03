@@ -20,6 +20,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	msgpackrpc "github.com/hashicorp/consul-net-rpc/net-rpc-msgpackrpc"
 	"github.com/hashicorp/consul-net-rpc/net/rpc"
@@ -3516,8 +3517,7 @@ func (es *executeServers) initPeering(t *testing.T, localPartition string) {
 
 	conn, err := grpc.DialContext(ctx, es.peeringServer.server.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(es.peeringServer.server.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	t.Cleanup(func() {
@@ -3533,8 +3533,7 @@ func (es *executeServers) initPeering(t *testing.T, localPartition string) {
 
 	conn, err = grpc.DialContext(ctx, es.server.server.config.RPCAddr.String(),
 		grpc.WithContextDialer(newServerDialer(es.server.server.config.RPCAddr.String())),
-		//nolint:staticcheck
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock())
 	require.NoError(t, err)
 	t.Cleanup(func() {

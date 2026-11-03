@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/consul/testrpc"
 	"github.com/stretchr/testify/require"
 	gogrpc "google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func TestConfigEntryBackend_EmptyPartition(t *testing.T) {
@@ -33,8 +34,7 @@ func TestConfigEntryBackend_EmptyPartition(t *testing.T) {
 
 	conn, err := gogrpc.DialContext(ctx, s1.config.RPCAddr.String(),
 		gogrpc.WithContextDialer(newServerDialer(s1.config.RPCAddr.String())),
-		//nolint:staticcheck
-		gogrpc.WithInsecure(),
+		gogrpc.WithTransportCredentials(insecure.NewCredentials()),
 		gogrpc.WithBlock())
 	require.NoError(t, err)
 	t.Cleanup(func() { conn.Close() })

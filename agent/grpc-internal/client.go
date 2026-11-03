@@ -262,7 +262,7 @@ func (c *ClientConnPool) dial(datacenter string, serverType string) (*grpc.Clien
 
 	conn, err := grpc.Dial(
 		target,
-		// use WithInsecure mode here because we handle the TLS wrapping in the
+		// use insecure credentials here because we handle the TLS wrapping in the
 		// custom dialer based on logic around whether the server has TLS enabled.
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithContextDialer(c.dialer),

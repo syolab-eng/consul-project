@@ -10,6 +10,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 
 	"github.com/hashicorp/go-hclog"
@@ -237,7 +238,7 @@ func TestSign_RPCForwarding(t *testing.T) {
 		ConnectEnabled: true,
 	})
 	//nolint:staticcheck
-	leaderConn, err := grpc.Dial(testutils.RunTestServer(t, leader).String(), grpc.WithInsecure())
+	leaderConn, err := grpc.Dial(testutils.RunTestServer(t, leader).String(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 
 	follower := NewServer(Config{

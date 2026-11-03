@@ -19,6 +19,7 @@ import (
 	"github.com/stretchr/testify/require"
 	gogrpc "google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/keepalive"
 	"google.golang.org/grpc/metadata"
 	grpcstatus "google.golang.org/grpc/status"
@@ -1876,8 +1877,7 @@ func (s testingServer) ClientConn(t *testing.T) *gogrpc.ClientConn {
 
 	conn, err := gogrpc.DialContext(ctx, rpcAddr,
 		gogrpc.WithContextDialer(newServerDialer(rpcAddr)),
-		//nolint:staticcheck
-		gogrpc.WithInsecure(),
+		gogrpc.WithTransportCredentials(insecure.NewCredentials()),
 		gogrpc.WithBlock())
 	require.NoError(t, err)
 	t.Cleanup(func() { conn.Close() })

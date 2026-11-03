@@ -21,6 +21,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/hashicorp/consul/acl"
 	"github.com/hashicorp/consul/agent/cache"
@@ -300,7 +301,7 @@ type consumer struct {
 
 func newConsumer(t *testing.T, addr net.Addr, store *submatview.Store, srv string) *consumer {
 	//nolint:staticcheck
-	conn, err := grpc.Dial(addr.String(), grpc.WithInsecure())
+	conn, err := grpc.Dial(addr.String(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 
 	c := &health.Client{

@@ -19,6 +19,7 @@ import (
 	"golang.org/x/sync/errgroup"
 	gogrpc "google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/durationpb"
 
@@ -46,7 +47,7 @@ func TestServer_Subscribe_SubjectIsRequired(t *testing.T) {
 	t.Cleanup(cancel)
 
 	//nolint:staticcheck
-	conn, err := gogrpc.DialContext(ctx, addr.String(), gogrpc.WithInsecure())
+	conn, err := gogrpc.DialContext(ctx, addr.String(), gogrpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 	t.Cleanup(logError(t, conn.Close))
 
@@ -116,7 +117,7 @@ func TestServer_Subscribe_IntegrationWithBackend(t *testing.T) {
 	t.Cleanup(cancel)
 
 	//nolint:staticcheck
-	conn, err := gogrpc.DialContext(ctx, addr.String(), gogrpc.WithInsecure())
+	conn, err := gogrpc.DialContext(ctx, addr.String(), gogrpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 	t.Cleanup(logError(t, conn.Close))
 
@@ -483,7 +484,7 @@ func TestServer_Subscribe_IntegrationWithBackend_ForwardToDC(t *testing.T) {
 	t.Cleanup(cancel)
 
 	//nolint:staticcheck
-	connRemoteDC, err := gogrpc.DialContext(ctx, addrRemoteDC.String(), gogrpc.WithInsecure())
+	connRemoteDC, err := gogrpc.DialContext(ctx, addrRemoteDC.String(), gogrpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 	t.Cleanup(logError(t, connRemoteDC.Close))
 	backendLocal.forwardConn = connRemoteDC
@@ -531,7 +532,7 @@ func TestServer_Subscribe_IntegrationWithBackend_ForwardToDC(t *testing.T) {
 	})
 
 	//nolint:staticcheck
-	connLocal, err := gogrpc.DialContext(ctx, addrLocal.String(), gogrpc.WithInsecure())
+	connLocal, err := gogrpc.DialContext(ctx, addrLocal.String(), gogrpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 	t.Cleanup(logError(t, connLocal.Close))
 
@@ -796,7 +797,7 @@ node "node1" {
 	t.Cleanup(cancel)
 
 	//nolint:staticcheck
-	conn, err := gogrpc.DialContext(ctx, addr.String(), gogrpc.WithInsecure())
+	conn, err := gogrpc.DialContext(ctx, addr.String(), gogrpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 	t.Cleanup(logError(t, conn.Close))
 	streamClient := pbsubscribe.NewStateChangeSubscriptionClient(conn)
@@ -949,7 +950,7 @@ node "node1" {
 	t.Cleanup(cancel)
 
 	//nolint:staticcheck
-	conn, err := gogrpc.DialContext(ctx, addr.String(), gogrpc.WithInsecure())
+	conn, err := gogrpc.DialContext(ctx, addr.String(), gogrpc.WithTransportCredentials(insecure.NewCredentials()))
 	require.NoError(t, err)
 	t.Cleanup(logError(t, conn.Close))
 
