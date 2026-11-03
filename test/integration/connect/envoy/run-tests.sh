@@ -617,7 +617,16 @@ function suite_setup {
     fi
 
     echo "Rebuilding 'test-sds-server' image..."
-    retry_default docker build --load -t test-sds-server -f "${SDS_DOCKERFILE}" test-sds-server
+    if [[ "${LOCAL_BUILD:-}" == "1" ]]; then
+        retry_default docker build --load -t test-sds-server -f "${SDS_DOCKERFILE}" test-sds-server
+    else
+        # Read .go-version at build time so a toolchain bump cannot leave this
+        # image on golang:latest or a hardcoded patch.
+        golang_version="$(head -n 1 "$(dirname "$0")/../../../../.go-version")"
+        retry_default docker build --load -t test-sds-server \
+            --build-arg "GOLANG_VERSION=${golang_version}" \
+            -f "${SDS_DOCKERFILE}" test-sds-server
+    fi
 }
 
 function suite_teardown {
