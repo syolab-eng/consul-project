@@ -20,7 +20,6 @@ import (
 	"github.com/docker/go-connections/nat"
 	dockercontainer "github.com/moby/moby/api/types/container"
 	"github.com/otiai10/copy"
-	"github.com/pkg/errors"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"google.golang.org/grpc"
@@ -800,7 +799,7 @@ type parsedPorts struct {
 func readSomeConfigFileFields(JSON string) (parsedConfig, error) {
 	var pc parsedConfig
 	if err := json.Unmarshal([]byte(JSON), &pc); err != nil {
-		return pc, errors.Wrap(err, "failed to parse config file")
+		return pc, fmt.Errorf("failed to parse config file: %w", err)
 	}
 	if pc.Datacenter == "" {
 		pc.Datacenter = "dc1"
