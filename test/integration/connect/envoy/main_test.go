@@ -7,7 +7,6 @@ package envoy
 
 import (
 	"flag"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -121,18 +120,18 @@ func discoverCases() ([]string, error) {
 // Recursively iterates through the directory passed by parameter looking for the sh and bash files.
 // Upon finding them, it calls crlf_file_check.
 func check_dir_files(path string) {
-	files, err := ioutil.ReadDir(path)
+	entries, err := os.ReadDir(path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, fil := range files {
+	for _, entry := range entries {
 
-		v := strings.Split(fil.Name(), ".")
+		v := strings.Split(entry.Name(), ".")
 		file_extension := v[len(v)-1]
 
-		file_path := path + "/" + fil.Name()
+		file_path := path + "/" + entry.Name()
 
-		if fil.IsDir() == true {
+		if entry.IsDir() == true {
 			check_dir_files(file_path)
 		}
 
@@ -145,7 +144,7 @@ func check_dir_files(path string) {
 // Check if a file contains CRLF line endings if so call crlf_normalize
 func crlf_file_check(file_name string) {
 
-	file, err := ioutil.ReadFile(file_name)
+	file, err := os.ReadFile(file_name)
 	text := string(file)
 
 	if edit := crlf_verify(text); edit != -1 {
@@ -168,5 +167,5 @@ func crlf_normalize(filename, text string) {
 	text = strings.Replace(text, "\r\n", "\n", -1)
 	data := []byte(text)
 
-	ioutil.WriteFile(filename, data, 0644)
+	os.WriteFile(filename, data, 0644)
 }
