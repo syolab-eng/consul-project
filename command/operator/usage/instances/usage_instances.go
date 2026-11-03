@@ -7,12 +7,13 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"maps"
+	"slices"
 	"sort"
 	"strings"
 	"text/tabwriter"
 
 	"github.com/mitchellh/cli"
-	"golang.org/x/exp/maps"
 
 	"github.com/hashicorp/consul/api"
 	"github.com/hashicorp/consul/command/flags"
@@ -137,7 +138,7 @@ func formatNodesCounts(usageStats map[string]api.ServiceUsage) (string, error) {
 
 	fmt.Fprint(tw, "\t\n")
 
-	nodes := maps.Keys(usageStats)
+	nodes := slices.Collect(maps.Keys(usageStats))
 	sort.Strings(nodes)
 	for _, dc := range nodes {
 		nodesTotal += usageStats[dc].Nodes

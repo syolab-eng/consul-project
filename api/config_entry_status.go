@@ -5,9 +5,8 @@ package api
 
 import (
 	"fmt"
+	"slices"
 	"time"
-
-	"golang.org/x/exp/slices"
 )
 
 // ResourceReference is a reference to a ConfigEntry

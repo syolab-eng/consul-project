@@ -8,12 +8,12 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"maps"
 	"reflect"
 	"regexp"
 	"sort"
 
 	"github.com/google/go-cmp/cmp"
-	"golang.org/x/exp/maps"
 
 	"github.com/hashicorp/go-hclog"
 

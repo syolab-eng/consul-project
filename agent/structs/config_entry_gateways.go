@@ -9,12 +9,12 @@ import (
 	"net"
 	"reflect"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
 
 	"github.com/miekg/dns"
-	"golang.org/x/exp/slices"
 
 	"github.com/hashicorp/consul/acl"
 	"github.com/hashicorp/consul/lib/stringslice"

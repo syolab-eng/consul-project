@@ -8,10 +8,10 @@ import (
 	"flag"
 	"fmt"
 	"math/rand"
+	"slices"
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"golang.org/x/exp/slices"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"

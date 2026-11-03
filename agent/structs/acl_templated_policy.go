@@ -10,10 +10,10 @@ import (
 	"fmt"
 	"hash"
 	"hash/fnv"
+	"slices"
 	"text/template"
 
 	"github.com/xeipuuv/gojsonschema"
-	"golang.org/x/exp/slices"
 
 	"github.com/hashicorp/go-multierror"
 
