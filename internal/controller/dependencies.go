@@ -5,11 +5,12 @@ package controller
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 	"sort"
 	"strings"
 
 	"github.com/hashicorp/go-multierror"
-	"golang.org/x/exp/maps"
 
 	"github.com/hashicorp/consul/internal/resource"
 	"github.com/hashicorp/consul/proto-public/pbresource"
@@ -83,7 +84,7 @@ func (m *Manager) CalculateDependencies(registrations []resource.Registration) D
 			watches[typeToString(w.watchedType)] = struct{}{}
 		}
 
-		out[typeToString(c.managedTypeWatch.watchedType)] = maps.Keys(watches)
+		out[typeToString(c.managedTypeWatch.watchedType)] = slices.Collect(maps.Keys(watches))
 	}
 
 	return out

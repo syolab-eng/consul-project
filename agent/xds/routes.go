@@ -6,8 +6,10 @@ package xds
 import (
 	"errors"
 	"fmt"
+	"maps"
 	"net"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -17,8 +19,6 @@ import (
 	envoy_route_v3 "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
 	prevpriorities "github.com/envoyproxy/go-control-plane/envoy/extensions/retry/priority/previous_priorities/v3"
 	envoy_matcher_v3 "github.com/envoyproxy/go-control-plane/envoy/type/matcher/v3"
-	"golang.org/x/exp/maps"
-	"golang.org/x/exp/slices"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/durationpb"
@@ -468,7 +468,7 @@ func (s *ResourceGenerator) routesForAPIGateway(cfgSnap *proxycfg.ConfigSnapshot
 
 	// Build up the routes in a deterministic way
 	readyListeners := getReadyListeners(cfgSnap)
-	listenerNames := maps.Keys(readyListeners)
+	listenerNames := slices.Collect(maps.Keys(readyListeners))
 	sort.Strings(listenerNames)
 
 	// Iterate over all listeners that are ready and configure their routes.
@@ -492,7 +492,7 @@ func (s *ResourceGenerator) routesForAPIGateway(cfgSnap *proxycfg.ConfigSnapshot
 
 		// Consolidate all routes for this listener into the minimum possible set based on hostname matching.
 		allRoutesForListener := []*structs.HTTPRouteConfigEntry{}
-		for _, routeRef := range maps.Keys(readyListener.routeReferences) {
+		for routeRef := range maps.Keys(readyListener.routeReferences) {
 			route, ok := cfgSnap.APIGateway.HTTPRoutes.Get(routeRef)
 			if !ok {
 				return nil, fmt.Errorf("missing route for route routeRef %s:%s", routeRef.Name, routeRef.Kind)

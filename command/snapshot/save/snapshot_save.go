@@ -6,9 +6,9 @@ package save
 import (
 	"flag"
 	"fmt"
-	"golang.org/x/exp/slices"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/mitchellh/cli"

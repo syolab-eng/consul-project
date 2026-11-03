@@ -6,10 +6,9 @@ package v1compat
 import (
 	"context"
 	"fmt"
+	"maps"
 	"slices"
 	"sort"
-
-	"golang.org/x/exp/maps"
 
 	"github.com/hashicorp/consul/acl"
 	"github.com/hashicorp/consul/agent/structs"
@@ -245,7 +244,7 @@ func (c *exportConsumers) addConsumers(consumers []*pbmulticluster.ExportedServi
 func (c *exportConsumers) configEntryConsumers() []structs.ServiceConsumer {
 	consumers := make([]structs.ServiceConsumer, 0, len(c.partitions)+len(c.peers)+len(c.samenessGroups))
 
-	partitions := maps.Keys(c.partitions)
+	partitions := slices.Collect(maps.Keys(c.partitions))
 	slices.Sort(partitions)
 	for _, consumer := range partitions {
 		consumers = append(consumers, structs.ServiceConsumer{
@@ -253,7 +252,7 @@ func (c *exportConsumers) configEntryConsumers() []structs.ServiceConsumer {
 		})
 	}
 
-	peers := maps.Keys(c.peers)
+	peers := slices.Collect(maps.Keys(c.peers))
 	slices.Sort(peers)
 	for _, consumer := range peers {
 		consumers = append(consumers, structs.ServiceConsumer{
@@ -261,7 +260,7 @@ func (c *exportConsumers) configEntryConsumers() []structs.ServiceConsumer {
 		})
 	}
 
-	samenessGroups := maps.Keys(c.samenessGroups)
+	samenessGroups := slices.Collect(maps.Keys(c.samenessGroups))
 	slices.Sort(samenessGroups)
 	for _, consumer := range samenessGroups {
 		consumers = append(consumers, structs.ServiceConsumer{
@@ -318,7 +317,7 @@ func (t *exportTracker) allExports() []structs.ExportedService {
 		})
 	}
 
-	namespaces := maps.Keys(t.namespaces)
+	namespaces := slices.Collect(maps.Keys(t.namespaces))
 	slices.Sort(namespaces)
 	for _, ns := range namespaces {
 		exports = append(exports, structs.ExportedService{
@@ -328,7 +327,7 @@ func (t *exportTracker) allExports() []structs.ExportedService {
 		})
 	}
 
-	services := maps.Keys(t.services)
+	services := slices.Collect(maps.Keys(t.services))
 	sort.Slice(services, func(i, j int) bool {
 		// the partitions must already be equal because we are only
 		// looking at resource exports for a single partition.

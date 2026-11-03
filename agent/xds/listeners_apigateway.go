@@ -5,6 +5,7 @@ package xds
 
 import (
 	"fmt"
+	"maps"
 	"sort"
 
 	envoy_core_v3 "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
@@ -12,7 +13,6 @@ import (
 	envoy_http_jwt_authn_v3 "github.com/envoyproxy/go-control-plane/envoy/extensions/filters/http/jwt_authn/v3"
 	envoy_http_v3 "github.com/envoyproxy/go-control-plane/envoy/extensions/filters/network/http_connection_manager/v3"
 	envoy_tls_v3 "github.com/envoyproxy/go-control-plane/envoy/extensions/transport_sockets/tls/v3"
-	"golang.org/x/exp/maps"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
@@ -179,7 +179,7 @@ func (s *ResourceGenerator) makeAPIGatewayListeners(address string, cfgSnap *pro
 			listener := makeListener(listenerOpts)
 
 			routes := make([]*structs.HTTPRouteConfigEntry, 0, len(readyListener.routeReferences))
-			for _, routeRef := range maps.Keys(readyListener.routeReferences) {
+			for routeRef := range maps.Keys(readyListener.routeReferences) {
 				route, ok := cfgSnap.APIGateway.HTTPRoutes.Get(routeRef)
 				if !ok {
 					return nil, fmt.Errorf("missing route for routeRef %s:%s", routeRef.Kind, routeRef.Name)

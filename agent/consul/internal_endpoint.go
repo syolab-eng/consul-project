@@ -5,10 +5,11 @@ package consul
 
 import (
 	"fmt"
+	"maps"
 	"net"
+	"slices"
 
 	hashstructure_v2 "github.com/mitchellh/hashstructure/v2"
-	"golang.org/x/exp/maps"
 
 	"github.com/hashicorp/go-bexpr"
 	"github.com/hashicorp/go-hclog"
@@ -796,7 +797,7 @@ func (m *Internal) AssignManualServiceVIPs(args *structs.AssignServiceManualVIPs
 		vipMap[ip] = struct{}{}
 	}
 	// Silently ignore duplicates.
-	args.ManualVIPs = maps.Keys(vipMap)
+	args.ManualVIPs = slices.Collect(maps.Keys(vipMap))
 
 	psn := structs.PeeredServiceName{
 		ServiceName: structs.NewServiceName(args.Service, &args.EnterpriseMeta),

@@ -6,9 +6,9 @@ package resource
 import (
 	"context"
 	"errors"
+	"maps"
 
 	"github.com/oklog/ulid/v2"
-	"golang.org/x/exp/maps"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
