@@ -1,7 +1,7 @@
 # Copyright IBM Corp. 2024, 2026
 # SPDX-License-Identifier: BUSL-1.1
 
-FROM docker.mirror.hashicorp.services/node:18-alpine
+FROM docker.mirror.hashicorp.services/node:24-alpine
 
 USER root
 
