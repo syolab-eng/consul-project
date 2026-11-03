@@ -2,6 +2,6 @@
 # SPDX-License-Identifier: BUSL-1.1
 
 ARG GOLANG_VERSION
-FROM golang:${GOLANG_VERSION}-alpine3.19
+FROM golang:${GOLANG_VERSION}-alpine3.24
 
 WORKDIR /consul
