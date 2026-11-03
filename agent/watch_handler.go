@@ -5,6 +5,7 @@ package agent
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
@@ -19,7 +20,6 @@ import (
 	"github.com/hashicorp/consul/api/watch"
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/go-hclog"
-	"golang.org/x/net/context"
 )
 
 const (
