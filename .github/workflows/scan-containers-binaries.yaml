@@ -73,17 +73,17 @@ jobs:
     if: github.repository == 'hashicorp/consul'
     steps:
       - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Set up Go
-        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         with:
           go-version: ${{ needs.get-go-version.outputs.go-version }}
 
       # hashicorp/security-scanner is a private repo, so we check it out with a 
       # read-only token and run it as a local action.
       - name: Clone Security Scanner repo
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: hashicorp/security-scanner
           token: ${{ secrets.PRODSEC_SCANNER_READ_ONLY }}
@@ -259,10 +259,10 @@ jobs:
       # Checkout gives the workspace a .git directory, which may be needed by
       # setup-go or the scanner when evaluating modules.
       - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Set up Go
-        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         with:
           go-version: ${{ needs.get-go-version.outputs.go-version }}
 
@@ -298,7 +298,7 @@ jobs:
       # hashicorp/security-scanner is private; check it out with a read-only
       # token and run it as a local action.
       - name: Clone Security Scanner repo
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: hashicorp/security-scanner
           token: ${{ secrets.PRODSEC_SCANNER_READ_ONLY }}
@@ -349,10 +349,10 @@ jobs:
     steps:
       # Checkout gives the workspace a .git directory.
       - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Set up Go
-        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         with:
           go-version: ${{ needs.get-go-version.outputs.go-version }}
 
@@ -416,7 +416,7 @@ jobs:
       # hashicorp/security-scanner is private; check it out with a read-only
       # token and run it as a local action.
       - name: Clone Security Scanner repo
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: hashicorp/security-scanner
           token: ${{ secrets.PRODSEC_SCANNER_READ_ONLY }}
