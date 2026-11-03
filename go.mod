@@ -16,6 +16,7 @@ exclude (
 )
 
 require (
+	dario.cat/mergo v1.0.1
 	github.com/NYTimes/gziphandler v1.0.1
 	github.com/aliyun/alibaba-cloud-sdk-go v1.63.107
 	github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e
@@ -88,7 +89,6 @@ require (
 	github.com/hashicorp/vault/api/auth/gcp v0.12.0
 	github.com/hashicorp/vault/sdk v0.25.1
 	github.com/hashicorp/yamux v0.1.2
-	github.com/imdario/mergo v0.3.16
 	github.com/kr/text v0.2.0
 	github.com/miekg/dns v1.1.73
 	github.com/mitchellh/cli v1.1.5
@@ -135,7 +135,6 @@ require (
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
 	cloud.google.com/go/iam v1.5.3 // indirect
-	dario.cat/mergo v1.0.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.21.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.13.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.12.0 // indirect
@@ -217,6 +216,7 @@ require (
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/hashicorp/mdns v1.0.7 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
+	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/jhump/protoreflect v1.17.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.1-0.20220621161143-b0104c826a24 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
